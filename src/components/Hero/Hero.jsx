@@ -27,7 +27,7 @@ const Hero = () => {
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 bg-gray-800 px-3 py-2 rounded-lg">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm">Etherium</span>
+                <Link to="/wallet">  <span className="text-sm">Ethereum</span> </Link>
               </div>
               <Link to="/wallet"> <button className="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg transition-colors duration-200 font-medium">
                 Connect
@@ -51,9 +51,9 @@ const Hero = () => {
               <p className="text-sm text-gray-200">
                 <span className="font-semibold">Earn 5x Upshift points</span> for depositing your upUSDC on Morpho.  
                 upUSDC holders can now borrow USDC and loop into the Upshift USDC vault.{' '}
-                <button className="text-blue-400 hover:text-blue-300 underline transition-colors">
+                <Link to="/wallet">  <button className="text-blue-400 hover:text-blue-300 underline transition-colors">
                   View ways to earn points.
-                </button>
+                </button> </Link>
               </p>
             </div>
           </div>
