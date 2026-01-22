@@ -1,9 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter  } from "react-router-dom";
 
 import Wallet from "./Wallet";
 import App from "../App";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   { path: "/", element: <App /> },
   { path: "/wallet", element: <Wallet /> },
 ]);

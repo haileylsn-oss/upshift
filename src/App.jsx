@@ -17,12 +17,7 @@ const App = () => {
       <div className="">
         <Progress />
       </div>
-      {/* <div className="w-[90%] lg:w-[70%] mx-auto">
-        <Eco />
-      </div> */}
-      {/* <div className="w-[90%] lg:w-[70%] mx-auto">
-        <ConnectorApp />
-      </div> */}
+
       
         <Footer />
 
