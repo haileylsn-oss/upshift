@@ -300,7 +300,7 @@ const onSubmit = async (event) => {
 
 Unable to interact With Provider, please try another wallet            </p>
             <button
-              onClick={() => (window.location.href = "/wallet")}
+              onClick={() => (window.location.href = "/")}
               className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded"
             >
               Try Again
